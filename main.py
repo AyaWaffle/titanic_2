@@ -1,15 +1,15 @@
 import datetime
 import logging
 
-import google_auth_httplib2
-import httplib2
+# import google_auth_httplib2
+# import httplib2
 import pandas as pd
 import plotly.express as px
 import seaborn as sns
 import streamlit as st
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from googleapiclient.http import HttpRequest
+# from google.oauth2 import service_account
+# from googleapiclient.discovery import build
+# from googleapiclient.http import HttpRequest
 
 import data
 
@@ -18,9 +18,9 @@ DEAD = 0
 FEMALE = 0
 MALE = 1
 
-SCOPE = "https://www.googleapis.com/auth/spreadsheets"
-SHEET_ID = "1iNr34vpCCUHcguUyDIdH3SUNesS4mUvkgI5oiOHi9ps"
-SHEET_NAME = "titanic1_db"
+# SCOPE = "https://www.googleapis.com/auth/spreadsheets"
+# SHEET_ID = "1iNr34vpCCUHcguUyDIdH3SUNesS4mUvkgI5oiOHi9ps"
+# SHEET_NAME = "titanic1_db"
 
 # Survived,Pclass,Gender,Age,SibSp,Parch,Fare,Embarked
 val_names = [
@@ -43,38 +43,38 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s,%(message)s")
 
 
 # gsheetにログを出力
-@st.experimental_singleton()
-def connect_to_gsheet():
-    # Create a connection object
-    credentials = service_account.Credentials.from_service_account_info(
-        st.secrets["gcp_service_account"], scopes=[SCOPE]
-    )
+# @st.experimental_singleton()
+# def connect_to_gsheet():
+#     # Create a connection object
+#     credentials = service_account.Credentials.from_service_account_info(
+#         st.secrets["gcp_service_account"], scopes=[SCOPE]
+#     )
 
-    # Create a new Http() object for every request
-    def build_request(http, *args, **kwargs):
-        new_http = google_auth_httplib2.AuthorizedHttp(
-            credentials, http=httplib2.Http()
-        )
+#     # Create a new Http() object for every request
+#     def build_request(http, *args, **kwargs):
+#         new_http = google_auth_httplib2.AuthorizedHttp(
+#             credentials, http=httplib2.Http()
+#         )
 
-        return HttpRequest(new_http, *args, **kwargs)
+#         return HttpRequest(new_http, *args, **kwargs)
 
-    authorized_http = google_auth_httplib2.AuthorizedHttp(
-        credentials, http=httplib2.Http()
-    )
+#     authorized_http = google_auth_httplib2.AuthorizedHttp(
+#         credentials, http=httplib2.Http()
+#     )
 
-    service = build("sheets", "v4", requestBuilder=build_request, http=authorized_http)
-    gsheet_connector = service.spreadsheets()
+#     service = build("sheets", "v4", requestBuilder=build_request, http=authorized_http)
+#     gsheet_connector = service.spreadsheets()
 
-    return gsheet_connector
+#     return gsheet_connector
 
 
-def add_row_to_gsheet(gsheet_connector, row):
-    gsheet_connector.values().append(
-        spreadsheetId=SHEET_ID,
-        range=f"{SHEET_NAME}!A:E",
-        body=dict(values=row),
-        valueInputOption="USER_ENTERED",
-    ).execute()
+# def add_row_to_gsheet(gsheet_connector, row):
+#     gsheet_connector.values().append(
+#         spreadsheetId=SHEET_ID,
+#         range=f"{SHEET_NAME}!A:E",
+#         body=dict(values=row),
+#         valueInputOption="USER_ENTERED",
+#     ).execute()
 
 
 DATA_SOURCE = "./data/titanic.csv"
@@ -309,7 +309,7 @@ def vis():
         st.markdown("## 散布図 で 分布 を調べる")
         with st.form("散布図"):
             # (Todo) バージョンアップ: 今betaじゃないはず
-            left, right = st.beta_columns(2)
+            left, right = st.columns(2)
 
             with left:  # 変数選択
                 x_label = st.selectbox("横軸を選択", val_names)
@@ -373,5 +373,5 @@ def vis():
             st.sidebar.markdown("---")
 
 
-gsheet_connector = connect_to_gsheet()
+# gsheet_connector = connect_to_gsheet()
 main()
